@@ -8,6 +8,13 @@
       "when": 1743169025732,
       "tag": "0000_dazzling_gladiator",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1743170221575,
+      "tag": "0001_nebulous_silver_centurion",
+      "breakpoints": true
     }
   ]
 }

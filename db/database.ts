@@ -3,7 +3,7 @@ import {sqliteTable, integer, text, numeric} from 'drizzle-orm/sqlite-core';
 export const habits = sqliteTable("habits", {
     id: integer('id').primaryKey({autoIncrement: true}),
     name: text('name').notNull(),
-    createDate: numeric('createDate').notNull(),
+    createDate: text('createDate').notNull(),
     days: numeric('days'), //Add hours?
     type: numeric('type'),
     priority: numeric('priority').notNull(),
