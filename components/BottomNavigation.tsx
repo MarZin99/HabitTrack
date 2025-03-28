@@ -17,7 +17,7 @@ const Tab = createBottomTabNavigator();
       tabBarStyle: styles.tabBarStyle,
       tabBarItemStyle: styles.tabBarItemStyle,
       tabBarBackground: () => (
-        <BlurView tint="light" intensity={70} style={{...StyleSheet.absoluteFillObject, backgroundColor: "transparent", height: 70}} /> 
+        <BlurView tint="light" intensity={80} experimentalBlurMethod="dimezisBlurView" style={{ height: 70}} /> 
       )
     }}>
       <Tab.Screen name="Home" component={HomeScreen} options={{headerShown : false, tabBarIcon: ({color}) => <FontAwesome size={28} name="home" color={color} />,}}/>

@@ -5,10 +5,11 @@ import { useEffect, useState } from "react"
 import { View, Text, StyleSheet } from "react-native"
 import * as schema from '@/db/database'
 import {useIsFocused} from '@react-navigation/native';
+import HabitsList from "@/components/HabitsList";
 
 
 const SettingsScreen = () => {
-    const [data, setData] = useState<Habit[]>([]);
+    const [habits, setHabits] = useState<Habit[]>([]);
 
     const db=useSQLiteContext();
     const drizzleDb = drizzle(db, {schema})
@@ -21,13 +22,13 @@ const SettingsScreen = () => {
 
     const getUpdateDataFromDataBase = async () => {
         const data = await drizzleDb.query.habits.findMany();
-        setData(data);
-        console.log(...data)
+        setHabits(data);
+
     }
 
     return (
         <View style={styles.container}>
-        <Text>Settings Screen</Text>
+            <HabitsList habits={habits} />
         </View>
     )
 }
@@ -37,7 +38,6 @@ const styles = StyleSheet.create({
     container: {
         flex:1,
         alignItems: "center",
-        justifyContent: "center",
         backgroundColor: "orangered"
     }
 })
