@@ -1,27 +1,27 @@
 import { Habit } from "@/db/database"
 import { View, Text, Button, TextInput, StyleSheet  } from "react-native"
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
-import { updateHabit } from "@/db/habitRepository"
 
 
 export type EditHabitProps = {
     onClose: () => void,
+    onUpdate: (habit: Habit) => void;
+    onDelete: (id: number) => void;
     habit: Habit,
 }
 
 
 const EditHabit = (props: EditHabitProps) => {
-    const {onClose, habit} = props;
+    const {onClose, onUpdate, onDelete, habit} = props;
 
     const {
         handleSubmit,
         control,
-        formState: { errors },
       } = useForm<Habit>({defaultValues: {...habit}})
 
-    const onSubmit: SubmitHandler<Habit> = (e) => {
-        updateHabit(habit.id, e);
-    }
+    const onSubmit: SubmitHandler<Habit> = (newHabit: Habit) =>  {
+        onUpdate({ ...habit, ...newHabit });
+    };
     
     return (
         <View style={styles.container}>
@@ -69,9 +69,19 @@ const EditHabit = (props: EditHabitProps) => {
                         />
                     )}
             />
-
-            <Button onPress={onClose} title={"Close"}></Button>
-            <Button onPress={handleSubmit(onSubmit)} title={"Save"}></Button>
+            <View style={styles.buttonContainer}>
+                <View style={styles.editButtonWraper}>
+                    <View style={styles.buttonWrapper}>
+                        <Button onPress={onClose} title={"Close"}></Button>
+                    </View>
+                    <View style={styles.buttonWrapper}>
+                        <Button onPress={handleSubmit(onSubmit)} title={"Save"}></Button>
+                    </View>
+                </View>
+             
+                {onDelete && <Button onPress={() => {onDelete(habit.id)}} title={"Delete"} color="red"></Button>}
+            </View>
+            
         </View>
     )
 }
@@ -98,6 +108,22 @@ const styles = StyleSheet.create({
     error: {
       color: "red",
       marginBottom: 10,
+    },
+    buttonContainer: {
+        padding: 1,
+        gap: 10,
+    },
+    editButtons: {
+        flexDirection: "row",
+        gap: 10,
+        justifyContent: "flex-start"
+    },
+    editButtonWraper: {
+        flexDirection: 'row',
+        gap: 10,
+      },
+    buttonWrapper: {
+        flex: 1, // Każdy View zajmuje połowę dostępnej przestrzeni
     },
   });
 

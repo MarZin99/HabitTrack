@@ -7,13 +7,15 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Theme } from "@/constants/Colors";
 import { CModal } from "./CModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditHabit from "@/forms/EditHabit.form";
+import { useSQLiteContext } from "expo-sqlite";
+import { drizzle } from "drizzle-orm/expo-sqlite";
+import * as schema from '@/db/database'
+import { useIsFocused } from "@react-navigation/native";
+import { deleteHabit, updateHabit } from "@/db/habitRepository";
 
 
-interface HabitsListProps {
-    habits: Habit[]
-}
 
 const BluredHeader = () => {
     return (        
@@ -24,11 +26,26 @@ const BluredHeader = () => {
     )
 }
 
-const HabitsList = (props: HabitsListProps) => {
-    const {habits} = props;
+const HabitsList = () => {
+
+    const [habits, setHabits] = useState<Habit[]>([]);
     const buttonColor = useThemeColor({light: Theme.light.button, dark: Theme.dark.button}, "button");
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [selectedHabit, setSelectedHabit] = useState<Habit | undefined>();
+
+    const db=useSQLiteContext();
+    const drizzleDb = drizzle(db, {schema})
+
+    const isFocused = useIsFocused();
+
+    useEffect(() => {
+        if(isFocused) getUpdateDataFromDataBase();
+    }, [isFocused]);
+
+    const getUpdateDataFromDataBase = async () => {
+        const data = await drizzleDb.query.habit.findMany();
+        setHabits(data);
+    }
 
     const selectHabit = (id: number) => {
         let habit = habits.find(x => x.id === id);
@@ -36,6 +53,18 @@ const HabitsList = (props: HabitsListProps) => {
         if (habit) setSelectedHabit(habit)
             setIsModalOpen(true)
         return 
+    }
+
+    const onHabitUpdate = async (newHabit: Habit) => {
+        console.log(newHabit);
+        await updateHabit(selectedHabit!.id, newHabit);
+        await getUpdateDataFromDataBase();
+    }
+
+    const onHabitDelete = async (id: number) => {
+        console.log(id);
+        await deleteHabit(id);
+        await getUpdateDataFromDataBase();
     }
 
     return (
@@ -46,7 +75,6 @@ const HabitsList = (props: HabitsListProps) => {
                 renderItem={({item}) => (
                 <View style={styles.habitRow}>
                     <Text style={styles.habitName}>{item.name}</Text>
-                    {/* <Text style={styles.habitName}>{item.biggestStreak}</Text> */}
                     <CButton onPress={() => {selectHabit(item.id)}}><FontAwesome size={28} name="bars" color={buttonColor} /></CButton>
                 </View>
                 )}
@@ -54,7 +82,7 @@ const HabitsList = (props: HabitsListProps) => {
                 stickyHeaderIndices={[0]} 
             />
             <CModal isOpen={isModalOpen}>
-                {selectedHabit && <EditHabit onClose={() => setIsModalOpen(false)} habit={selectedHabit}/>}                    
+                {selectedHabit && <EditHabit onClose={() => {setIsModalOpen(false)}} onUpdate={onHabitUpdate} onDelete={onHabitDelete}  habit={selectedHabit}/>}                    
             </CModal>
         </View>
     )
@@ -89,8 +117,4 @@ const styles = StyleSheet.create({
     header: {
         fontWeight: "700",
     },
-    editButton: {
-
-    }
-
 })
