@@ -24,7 +24,6 @@ const BluredHeader = () => {
     )
 }
 
-
 const HabitsList = (props: HabitsListProps) => {
     const {habits} = props;
     const buttonColor = useThemeColor({light: Theme.light.button, dark: Theme.dark.button}, "button");
@@ -36,7 +35,6 @@ const HabitsList = (props: HabitsListProps) => {
         if (!habit) return
         if (habit) setSelectedHabit(habit)
             setIsModalOpen(true)
-            console.log(habit)
         return 
     }
 

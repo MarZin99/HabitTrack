@@ -20,7 +20,6 @@ const db = drizzle(expoDb);
   if(success) {
     const value = AsyncStorage.getItemSync('dbInitialized');
     if (value) return;
-    console.log("Inserting dummy data")
 
     await db.delete(note);
     await db.delete(habit);
@@ -30,8 +29,4 @@ const db = drizzle(expoDb);
     await db.insert(habit).values(HABITS);
     await db.insert(habitOccurences).values(HABITOCURENCES);
   }
-  else {
-    console.log("Inserting doesnt work. Error:", error)
-  }
-
 }
