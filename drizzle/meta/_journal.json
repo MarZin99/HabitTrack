@@ -15,6 +15,13 @@
       "when": 1743170221575,
       "tag": "0001_nebulous_silver_centurion",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1743432815980,
+      "tag": "0002_brainy_champions",
+      "breakpoints": true
     }
   ]
 }

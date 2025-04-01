@@ -1,20 +1,27 @@
-import {sqliteTable, integer, text, numeric} from 'drizzle-orm/sqlite-core';
+import {sqliteTable, integer, text, numeric, } from 'drizzle-orm/sqlite-core';
 
-export const habits = sqliteTable("habits", {
+export const habit = sqliteTable("habit", {
     id: integer('id').primaryKey({autoIncrement: true}),
     name: text('name').notNull(),
+    description: text('description'),
+    days: numeric('days'),
     createDate: text('createDate').notNull(),
-    days: numeric('days'), //Add hours?
-    type: numeric('type'),
     priority: numeric('priority').notNull(),
-    noteId: numeric('noteId').references(() => notes.id),
-    //icon: text("icon"),
-    streak: numeric('streak').notNull(),
+    noteId: numeric('noteId').references(() => note.id),
+    biggestStreak: numeric('streak'),
 })
 
-export const notes = sqliteTable('notes', {
+export const habitOccurences = sqliteTable('habitOccurences', {
+    id: integer('id').primaryKey({autoIncrement: true}),
+    habitId: integer('habitId').references(() => habit.id),
+    date: text('createDate').notNull(),
+    completed: integer("completed").notNull().default(0),
+    noteId: integer('noteId').references(() => note.id),
+})
+
+export const note = sqliteTable('note', {
     id: integer('id').primaryKey({autoIncrement: true}),
     text: text('text').notNull(),
 })
 
-export type Habit = typeof habits.$inferSelect;
+export type Habit = typeof habit.$inferSelect;

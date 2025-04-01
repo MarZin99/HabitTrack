@@ -1,7 +1,14 @@
 import { Habit } from "@/db/database";
-import { FlatList, View, Text } from "react-native";
-import {StyleSheet} from "react-native"
+import { FlatList, View, Text, Button } from "react-native";
+import { StyleSheet } from "react-native"
 import { BlurView } from 'expo-blur';
+import CButton from "./CButton";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { Theme } from "@/constants/Colors";
+import { CModal } from "./CModal";
+import { useState } from "react";
+import EditHabit from "@/forms/EditHabit.form";
 
 
 interface HabitsListProps {
@@ -10,15 +17,28 @@ interface HabitsListProps {
 
 const BluredHeader = () => {
     return (        
-    <BlurView tint="light" intensity={80} experimentalBlurMethod="dimezisBlurView" style={[ styles.habitRow, styles.headerContainer]} > 
+    <BlurView tint="light" intensity={80} experimentalBlurMethod="dimezisBlurView" style={styles.habitRow} > 
         <Text style={[styles.habitName, styles.header]}>Name</Text>
         <Text style={[styles.habitName, styles.header]}>Streak</Text>
     </BlurView>
     )
 }
 
+
 const HabitsList = (props: HabitsListProps) => {
     const {habits} = props;
+    const buttonColor = useThemeColor({light: Theme.light.button, dark: Theme.dark.button}, "button");
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [selectedHabit, setSelectedHabit] = useState<Habit | undefined>();
+
+    const selectHabit = (id: number) => {
+        let habit = habits.find(x => x.id === id);
+        if (!habit) return
+        if (habit) setSelectedHabit(habit)
+            setIsModalOpen(true)
+            console.log(habit)
+        return 
+    }
 
     return (
         <View style={styles.container}>
@@ -28,12 +48,16 @@ const HabitsList = (props: HabitsListProps) => {
                 renderItem={({item}) => (
                 <View style={styles.habitRow}>
                     <Text style={styles.habitName}>{item.name}</Text>
-                    <Text style={styles.habitName}>{item.streak}</Text>
+                    {/* <Text style={styles.habitName}>{item.biggestStreak}</Text> */}
+                    <CButton onPress={() => {selectHabit(item.id)}}><FontAwesome size={28} name="bars" color={buttonColor} /></CButton>
                 </View>
                 )}
                 ListHeaderComponent={BluredHeader}
                 stickyHeaderIndices={[0]} 
             />
+            <CModal isOpen={isModalOpen}>
+                {selectedHabit && <EditHabit onClose={() => setIsModalOpen(false)} habit={selectedHabit}/>}                    
+            </CModal>
         </View>
     )
 }
@@ -67,7 +91,8 @@ const styles = StyleSheet.create({
     header: {
         fontWeight: "700",
     },
-    headerContainer: {
+    editButton: {
+
     }
 
 })

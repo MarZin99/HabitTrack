@@ -20,13 +20,13 @@ const SettingsScreen = () => {
     const isFocused = useIsFocused();
 
     useEffect(() => {
-        if(isFocused) getUpdateDataFromDataBase();
+        if(isFocused)getUpdateDataFromDataBase()
     }, [isFocused]);
 
     const getUpdateDataFromDataBase = async () => {
-        const data = await drizzleDb.query.habits.findMany();
+        console.log("test")
+        const data = await drizzleDb.query.habit.findMany();
         setHabits(data);
-
     }
 
     return (

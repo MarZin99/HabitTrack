@@ -1,19 +1,37 @@
-import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
 
 import AsyncStorage from 'expo-sqlite/kv-store';
-import { notes, habits } from "./database";
-import { HABITS, NOTES } from "./dummyData";
+import { note, habit, habitOccurences } from "./database";
+import { HABITOCURENCES, HABITS, NOTES } from "./dummyData";
+import { openDatabaseSync } from 'expo-sqlite';
+import { drizzle } from 'drizzle-orm/expo-sqlite';
+import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
+import migrations from "@/drizzle/migrations";
+
+const DATABASE_NAME = "habits"
 
 
+export const addDummyData = async () => {
 
-export const addDummyData = async (db: ExpoSQLiteDatabase) => {
+const expoDb = openDatabaseSync(DATABASE_NAME);
+const db = drizzle(expoDb);
+  
+  const {success, error} = useMigrations(db, migrations);
+
+  if(success) {
     const value = AsyncStorage.getItemSync('dbInitialized');
     if (value) return;
-
     console.log("Inserting dummy data")
 
+    await db.delete(note);
+    await db.delete(habit);
+    await db.delete(habitOccurences);
 
-    await db.insert(notes).values(NOTES)
-    await db.insert(habits).values(HABITS);
+    await db.insert(note).values(NOTES);
+    await db.insert(habit).values(HABITS);
+    await db.insert(habitOccurences).values(HABITOCURENCES);
+  }
+  else {
+    console.log("Inserting doesnt work. Error:", error)
+  }
 
 }

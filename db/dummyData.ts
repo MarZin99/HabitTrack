@@ -1,43 +1,61 @@
 export const HABITS = [
     {
-        name: "Poranna medytacja",
+        name: "Morning meditation",
         createDate: Date.now().toString(),
         days: "127",
-        type: "1",
         priority: "1",
-        noteId: null,
-        streak: "0",
+        noteId: undefined,
+        biggestStreak: "0",
     },
     {
-        name: "Siłownia",
+        name: "Working out ",
         createDate: Date.now().toString(),
         days: "62",
-        type: "2",
         priority: "2",
         noteId: undefined,
-        streak: "3",
+        biggestStreak: "0",
     },
     {
-        name: "Czytanie książki",
+        name: "Book reading",
         createDate: Date.now().toString(),
         days: "127",
-        type: "3",
         priority: "2",
         noteId: "2",
-        streak: "7",
+        biggestStreak: "0",
     },
     {
-        name: "Nauka kodowania",
+        name: "Programming lessons",
         createDate: Date.now().toString(),
         days: "127",
-        type: "3",
         priority: "3",
         noteId: undefined,
-        streak: "4",
+        biggestStreak: "0",
     }
 ]
 
 export const NOTES = [
-    {text: "Było ciężko"},
-    {text: "Było fajnie, ale nie wiem"}
+    {text: "I would like to perform some meditation and test how it affect my morning routine"},
+    {text: "I found pretty nice book and want to finish it by the end of the month"},
+    {text: "First Meditation. I dot feel it yet"}
+]
+
+export const HABITOCURENCES = [
+    {
+        habitId: 1,
+        date: new Date("27-03-2025").toString(),
+        completed: 1,
+        noteId:3,
+    },
+    {
+        habitId: 1,
+        date: new Date("28-03-2025").toString(),
+        completed: 1,
+        noteId:undefined,
+    },
+    {
+        habitId: 1,
+        date: new Date("29-03-2025").toString(),
+        completed: 1,
+        noteId:undefined,
+    },
 ]
