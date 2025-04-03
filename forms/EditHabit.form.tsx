@@ -6,13 +6,14 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form"
 export type EditHabitProps = {
     onClose: () => void,
     onUpdate: (habit: Habit) => void;
+    onCreate: (habit: Habit) => void;
     onDelete: (id: number) => void;
-    habit: Habit,
+    habit?: Habit,
 }
 
 
 const EditHabit = (props: EditHabitProps) => {
-    const {onClose, onUpdate, onDelete, habit} = props;
+    const {onClose, onUpdate, onDelete, onCreate, habit} = props;
 
     const {
         handleSubmit,
@@ -20,7 +21,7 @@ const EditHabit = (props: EditHabitProps) => {
       } = useForm<Habit>({defaultValues: {...habit}})
 
     const onSubmit: SubmitHandler<Habit> = (newHabit: Habit) =>  {
-        onUpdate({ ...habit, ...newHabit });
+        habit ? onUpdate({ ...habit, ...newHabit }) : onCreate(newHabit)
     };
     
     return (
@@ -75,11 +76,11 @@ const EditHabit = (props: EditHabitProps) => {
                         <Button onPress={onClose} title={"Close"}></Button>
                     </View>
                     <View style={styles.buttonWrapper}>
-                        <Button onPress={handleSubmit(onSubmit)} title={"Save"}></Button>
+                        <Button onPress={handleSubmit(onSubmit)} title={habit ? "Save" : "Add"}></Button>
                     </View>
                 </View>
              
-                {onDelete && <Button onPress={() => {onDelete(habit.id)}} title={"Delete"} color="red"></Button>}
+                {onDelete && habit && <Button onPress={() => {onDelete(habit.id)}} title={"Delete"} color="red"></Button>}
             </View>
             
         </View>
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
         gap: 10,
       },
     buttonWrapper: {
-        flex: 1, // Każdy View zajmuje połowę dostępnej przestrzeni
+        flex: 1,
     },
   });
 

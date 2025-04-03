@@ -13,7 +13,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import * as schema from '@/db/database'
 import { useIsFocused } from "@react-navigation/native";
-import { deleteHabit, updateHabit } from "@/db/habitRepository";
+import { addHabit, deleteHabit, updateHabit } from "@/db/habitRepository";
 
 
 
@@ -67,6 +67,11 @@ const HabitsList = () => {
         await getUpdateDataFromDataBase();
     }
 
+    const onHabitCreate = async (newHabit: Habit) => {
+        await addHabit(newHabit);
+        await getUpdateDataFromDataBase();
+    }
+
     return (
         <View style={styles.container}>
             <FlatList
@@ -81,8 +86,14 @@ const HabitsList = () => {
                 ListHeaderComponent={BluredHeader}
                 stickyHeaderIndices={[0]} 
             />
+            <Button title="Add New" onPress={() => {setSelectedHabit(undefined); setIsModalOpen(true)}}></Button>
             <CModal isOpen={isModalOpen}>
-                {selectedHabit && <EditHabit onClose={() => {setIsModalOpen(false)}} onUpdate={onHabitUpdate} onDelete={onHabitDelete}  habit={selectedHabit}/>}                    
+                <EditHabit 
+                    onClose={() => {setIsModalOpen(false)}} 
+                    onUpdate={onHabitUpdate} 
+                    onDelete={onHabitDelete}
+                    onCreate={onHabitCreate}
+                    habit={selectedHabit}/>                 
             </CModal>
         </View>
     )

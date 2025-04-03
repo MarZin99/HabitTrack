@@ -8,7 +8,11 @@ const DATABASE_NAME = "habits"
 const db = drizzle(openDatabaseSync(DATABASE_NAME));
 
 export const addHabit = async (addHabit: AddHabit) => {
-    await db.insert(habit).values(addHabit)
+    const newHabit: AddHabit = {
+        ...addHabit,
+        createDate: Date.now().toString(),
+    }
+    await db.insert(habit).values(newHabit)
 }
 
 export const deleteHabit = async (id: number) => {
