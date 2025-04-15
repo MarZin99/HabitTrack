@@ -56,13 +56,11 @@ const HabitsList = () => {
     }
 
     const onHabitUpdate = async (newHabit: Habit) => {
-        console.log(newHabit);
         await updateHabit(selectedHabit!.id, newHabit);
         await getUpdateDataFromDataBase();
     }
 
     const onHabitDelete = async (id: number) => {
-        console.log(id);
         await deleteHabit(id);
         await getUpdateDataFromDataBase();
     }

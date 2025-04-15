@@ -30,7 +30,6 @@ const EditHabit = (props: EditHabitProps) => {
       } = useForm<Habit>({defaultValues: {...habit}})
 
     const onSubmit: SubmitHandler<Habit> = (newHabit: Habit) =>  {
-        console.log("NEwHabit:", newHabit)
         habit ? onUpdate({ ...habit, ...newHabit }) : onCreate(newHabit)
     };
     
