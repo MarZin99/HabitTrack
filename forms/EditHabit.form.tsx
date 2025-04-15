@@ -63,7 +63,7 @@ const EditHabit = (props: EditHabitProps) => {
                 control={control} 
                 name="priority" 
                 render={({ field: { onChange, value } }) => (
-                    <CDropdown options={priorityOptions} onChange={(e) => onChange(e.value)} placeholder={value} style={styles.input} value={value}/>
+                    <CDropdown options={priorityOptions} onChange={(e) => onChange(e.value)} placeholder={value} style={styles.dropdown} value={value}/>
                 )}
             />
             <Text>Biggest streak:</Text>
@@ -112,6 +112,12 @@ const styles = StyleSheet.create({
       padding: 8,
       borderRadius: 5,
       marginBottom: 10,
+    },
+    dropdown: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 5,
+        marginBottom: 10,
     },
     error: {
       color: "red",

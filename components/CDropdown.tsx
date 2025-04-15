@@ -35,18 +35,18 @@ const CDropdown = (props: CDropdownProps) => {
             <FontAwesome size={23} name="caret-down" color={"black"} />
         </TouchableOpacity>
         {
-            expanded && 
-                <View style={[styles.options]}>
+            expanded && (
+                <View style={styles.options}>
                     <FlatList 
                         data={options}
                         keyExtractor={item => item.value.toString()}
                         renderItem={({item}) => 
                             <TouchableOpacity activeOpacity={0.8} style={styles.optionItem} key={item.label} onPress={() => onSelect(item)}>
-                                <Text>{item.label}</Text>
+                                <Text >{item.label}</Text>
                             </TouchableOpacity>}
                         ItemSeparatorComponent={() => <View style={styles.separator} />}
                     />
-                </View>
+                </View>)
         }
     </View>
 
@@ -54,18 +54,19 @@ const CDropdown = (props: CDropdownProps) => {
 
 const styles = StyleSheet.create({
     dropdown: {
-        height: 50,
+        height: 38,
         justifyContent: "space-between",
         backgroundColor: "#fff",
         flexDirection: "row",
         alignItems: "center",
-        paddingHorizontal: 5,
+        paddingHorizontal: 8,
     },
     options: {
         position: "absolute",
-        top: 53,
+        top: 40,
+        boxShadow: "0 5 15 rgba(0,0,0,0.4)",
         backgroundColor: "white",
-        width: "90%",
+        width: "100%",
         padding: 10,
         borderRadius: 8,
         maxHeight: 250,
@@ -75,15 +76,9 @@ const styles = StyleSheet.create({
         height: 10,
     },
     optionItem: {
-        height: 35,
+        height: 36,
         justifyContent: "center"
     },
-    backdrop: {
-        padding: 10,
-        justifyContent: "center",
-        alignItems: "center",
-        flex: 1
-    }
 })
 
 export default CDropdown
