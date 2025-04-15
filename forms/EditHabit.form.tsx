@@ -1,6 +1,9 @@
 import { Habit } from "@/db/database"
 import { View, Text, Button, TextInput, StyleSheet  } from "react-native"
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
+import { CDropdownItem } from "@/models/CDropdownOptions.model";
+import { Priority } from "@/enums/Priority";
+import CDropdown from "@/components/CDropdown";
 
 
 export type EditHabitProps = {
@@ -10,6 +13,12 @@ export type EditHabitProps = {
     onDelete: (id: number) => void;
     habit?: Habit,
 }
+
+const priorityOptions: CDropdownItem[] = [
+    { label: "Low", value: Priority.Low },
+    { label: "Medium", value: Priority.Medium },
+    { label: "High", value: Priority.High },
+  ];
 
 
 const EditHabit = (props: EditHabitProps) => {
@@ -21,6 +30,7 @@ const EditHabit = (props: EditHabitProps) => {
       } = useForm<Habit>({defaultValues: {...habit}})
 
     const onSubmit: SubmitHandler<Habit> = (newHabit: Habit) =>  {
+        console.log("NEwHabit:", newHabit)
         habit ? onUpdate({ ...habit, ...newHabit }) : onCreate(newHabit)
     };
     
@@ -53,11 +63,8 @@ const EditHabit = (props: EditHabitProps) => {
                 control={control} 
                 name="priority" 
                 render={({ field: { onChange, value } }) => (
-                    <TextInput 
-                        style={styles.input}
-                        value={value ?? ""}
-                        onChangeText={onChange}/>
-                    )}
+                    <CDropdown options={priorityOptions} onChange={(e) => onChange(e.value)} placeholder={value} style={styles.input} value={value}/>
+                )}
             />
             <Text>Biggest streak:</Text>
             <Controller 
