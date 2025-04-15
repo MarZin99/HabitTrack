@@ -57,7 +57,7 @@ const CDropdown = (props: CDropdownProps) => {
                     </TouchableOpacity>}
                 ItemSeparatorComponent={() => <View style={styles.separator}/>}
             />
-        </Animated.View>)
+        </Animated.View>
         
     </View>
 
