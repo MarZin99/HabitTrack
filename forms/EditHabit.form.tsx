@@ -31,6 +31,7 @@ const EditHabit = (props: EditHabitProps) => {
 
     const onSubmit: SubmitHandler<Habit> = (newHabit: Habit) =>  {
         habit ? onUpdate({ ...habit, ...newHabit }) : onCreate(newHabit)
+        onClose();
     };
     
     return (
@@ -86,7 +87,11 @@ const EditHabit = (props: EditHabitProps) => {
                     </View>
                 </View>
              
-                {onDelete && habit && <Button onPress={() => {onDelete(habit.id)}} title={"Delete"} color="red"></Button>}
+                {onDelete && habit && <Button onPress={() => {
+                    onDelete(habit.id)
+                    onClose();
+                    }} 
+                title={"Delete"} color="red"></Button>}
             </View>
             
         </View>
