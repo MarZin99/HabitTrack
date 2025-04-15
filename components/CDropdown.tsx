@@ -2,6 +2,7 @@ import { CDropdownItem } from "@/models/CDropdownOptions.model";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useCallback, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, StyleProp, ViewStyle } from "react-native"
+import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 
 export interface CDropdownProps {
     placeholder?: string;
@@ -9,16 +10,28 @@ export interface CDropdownProps {
     value?: string | number;
     onChange: (item: CDropdownItem) => void;
     style?: StyleProp<ViewStyle> | undefined;
+    dropdownHeight?: number;
 }
 
-
 const CDropdown = (props: CDropdownProps) => {
-    const {placeholder, options, onChange, style, value} = props
+    const {placeholder, options, onChange, style, value, dropdownHeight = 150} = props
     const [expanded, setExpanded] = useState<boolean>(false);
     const selected = options.find(opt => opt.value == value);
 
+    const optionsHeight = useSharedValue(0);
+    const animatedStyle=useAnimatedStyle(() => {
+        return {height: optionsHeight.value}
+    })
 
-    const toggle = useCallback(() => {setExpanded(!expanded)}, [expanded])
+    const toggle = useCallback(() => {
+        setExpanded(!expanded);
+        if(expanded) {
+            optionsHeight.value = withTiming(0, {duration: 230})
+        }else{
+            optionsHeight.value = withSpring( dropdownHeight, {stiffness: 60})
+        }
+    }, [expanded])
+    
    
     const onSelect = useCallback((item: CDropdownItem) => {
         onChange(item)
@@ -34,20 +47,18 @@ const CDropdown = (props: CDropdownProps) => {
             <Text>{selected?.label ?? placeholder}</Text>
             <FontAwesome size={23} name="caret-down" color={"black"} />
         </TouchableOpacity>
-        {
-            expanded && (
-                <View style={styles.options}>
-                    <FlatList 
-                        data={options}
-                        keyExtractor={item => item.value.toString()}
-                        renderItem={({item}) => 
-                            <TouchableOpacity activeOpacity={0.8} style={styles.optionItem} key={item.label} onPress={() => onSelect(item)}>
-                                <Text >{item.label}</Text>
-                            </TouchableOpacity>}
-                        ItemSeparatorComponent={() => <View style={styles.separator} />}
-                    />
-                </View>)
-        }
+        <Animated.View style={[styles.options, animatedStyle]}>
+            <FlatList
+                data={options}
+                keyExtractor={item => item.value.toString()}
+                renderItem={({item}) => 
+                    <TouchableOpacity activeOpacity={0.8} style={styles.optionItem} key={item.label} onPress={() => {onSelect(item), toggle()}}>
+                        <Text>{item.label}</Text>
+                    </TouchableOpacity>}
+                ItemSeparatorComponent={() => <View style={styles.separator}/>}
+            />
+        </Animated.View>)
+        
     </View>
 
 }
@@ -67,16 +78,15 @@ const styles = StyleSheet.create({
         boxShadow: "0 5 15 rgba(0,0,0,0.4)",
         backgroundColor: "white",
         width: "100%",
-        padding: 10,
         borderRadius: 8,
-        maxHeight: 250,
         zIndex: 2,
     },
     separator: {
         height: 10,
     },
     optionItem: {
-        height: 36,
+        padding: 10,
+        height: 40,
         justifyContent: "center"
     },
 })
