@@ -4,17 +4,23 @@ export const habit = sqliteTable("habit", {
     id: integer('id').primaryKey({autoIncrement: true}),
     name: text('name').notNull(),
     description: text('description'),
-    days: numeric('days'),
     createDate: text('createDate').notNull(),
     priority: numeric('priority').notNull(),
     noteId: numeric('noteId').references(() => note.id),
     biggestStreak: numeric('streak'),
 })
 
-export const habitOccurences = sqliteTable('habitOccurences', {
+export const habitSchedule = sqliteTable('habitOccurences', {
     id: integer('id').primaryKey({autoIncrement: true}),
     habitId: integer('habitId').references(() => habit.id),
-    date: text('createDate').notNull(),
+    type: integer('type').notNull(),
+    interval: integer('interval'),
+    dayOfWeek: integer('dayOfWeek'),
+    dayOfMonth: integer('dayOfMonth'),
+    month: integer('month'),
+    date: text('date'),
+    createDate: text('createDate').notNull(),
+    ordinal: integer('ordinal'),
     completed: integer("completed").notNull().default(0),
     noteId: integer('noteId').references(() => note.id),
 })

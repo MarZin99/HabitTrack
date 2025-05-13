@@ -22,6 +22,13 @@
       "when": 1743432815980,
       "tag": "0002_brainy_champions",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1744754351142,
+      "tag": "0003_melted_cassandra_nova",
+      "breakpoints": true
     }
   ]
 }
